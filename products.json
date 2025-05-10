@@ -4,21 +4,39 @@
       "name": "Чайник электрический",
       "price": 2300,
       "description": "Простой и надежный электрический чайник на 1.7 литра.",
-      "image": "kettle.jpg"
+      "image": "kettle.jpg",
+      "category": "الکترونیک"
     },
     {
       "id": 2,
       "name": "Термокружка",
       "price": 1200,
       "description": "Термокружка с крышкой, сохраняет тепло до 4 часов.",
-      "image": "thermo_mug.jpg"
+      "image": "thermo_mug.jpg",
+      "category": "الکترونیک"
     },
     {
       "id": 3,
       "name": "Носки с узорами",
       "price": 400,
       "description": "Удобные и теплые носки с зимними узорами.",
-      "image": "socks.jpg"
+      "image": "socks.jpg",
+      "category": "الکترونیک"
+    },
+    {
+      "id": 4,
+      "name": "گوشی موبایل",
+      "description": "گوشی موبایل سامسونگ",
+      "price": 500,
+      "category": "الکترونیک"
+    },
+    {
+      "id": 5,
+      "name": "کتاب",
+      "description": "کتاب برنامه نویسی",
+      "price": 20,
+      "category": "کتاب"
     }
   ]
+  
   
