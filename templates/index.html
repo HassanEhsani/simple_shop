@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="fa">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>فروشگاه ساده من</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>محصولات فروشگاه</h1>
     {% for product in products %}
-        <div>
-            <h2>{{ product.name }}</h2>
-            <p>{{ product.description }}</p>
-            <p>قیمت: {{ product.price }} تومان</p>
-        </div>
-        <hr>
+    <div>
+      <h2>{{ product.name }}</h2>
+      <p>{{ product.description }}</p>
+      <p>Цена: {{ product.price }} ₽</p>
+    </div>
+    <hr />
     {% endfor %}
-</body>
+  </body>
 </html>
