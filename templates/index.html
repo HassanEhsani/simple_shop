@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="fa">
+  <p><a href="{{ url_for('cart') }}">مشاهده سبد خرید 🛒</a></p>
+
   <head>
     <meta charset="UTF-8" />
     <title>فروشگاه ساده من</title>
@@ -12,7 +14,13 @@
       <p>{{ product.description }}</p>
       <p>Цена: {{ product.price }} ₽</p>
     </div>
+    <form method="POST" action="{{ url_for('add_to_cart') }}">
+      <input type="hidden" name="product_id" value="{{ product.id }}" />
+      <button type="submit">Добавить в корзину</button>
+    </form>
+
     <hr />
+    <p><a href="{{ url_for('checkout') }}">Оформить заказ</a></p>
     {% endfor %}
   </body>
 </html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Оформление заказа</title>
+</head>
+<body>
+    <h1>Оформление заказа</h1>
+
+    <form method="POST" action="{{ url_for('checkout') }}">
+        <label for="name">Имя:</label>
+        <input type="text" name="name" required><br><br>
+
+        <label for="address">Адрес:</label>
+        <input type="text" name="address" required><br><br>
+
+        <label for="phone">Телефон:</label>
+        <input type="text" name="phone" required><br><br>
+
+        <h3>Корзина:</h3>
+        {% if cart %}
+            <ul>
+                {% for item in cart %}
+                    <li>{{ item.name }} - {{ item.price }} ₽</li>
+                {% endfor %}
+            </ul>
+            <p><strong>Итого: {{ total }} ₽</strong></p>
+        {% else %}
+            <p>Корзина пуста.</p>
+        {% endif %}
+
+        <button type="submit">Оформить заказ</button>
+    </form>
+</body>
+</html>

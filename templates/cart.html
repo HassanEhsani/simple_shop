@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина</title>
+</head>
+<body>
+    <h1>Корзина покупок</h1>
+
+    {% if cart %}
+        <ul>
+            {% for item in cart %}
+                <li>{{ item.name }} - {{ item.price }} ₽</li>
+            {% endfor %}
+        </ul>
+        <p><strong>Итого: {{ total }} ₽</strong></p>
+    {% else %}
+        <p>Корзина пуста.</p>
+    {% endif %}
+
+    <a href="{{ url_for('index') }}">Вернуться в магазин</a>
+</body>
+</html>
