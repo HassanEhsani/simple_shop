@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>ورود</title>
+</head>
+<body>
+    <h2>{{ t('login', lang) }}</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post">
+        <label for="email">{{ t('email', lang) }}</label>
+        <input type="email" name="email" required><br>
+
+        <label for="password">{{ t('password', lang) }}</label>
+        <input type="password" name="password" required><br>
+
+        <button type="submit">{{ t('login', lang) }}</button>
+    </form>
+
+    <p><a href="{{ url_for('main.register', lang=lang) }}">{{ t('no_account_yet', lang) }}</a></p>
+</body>
+</html>
