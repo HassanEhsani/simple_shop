@@ -88,5 +88,17 @@
     "en": "Already have an account? Login",
     "ru": "Уже есть аккаунт? Войти",
     "tj": "Ҳисоб доред? Даромад"
-  }
+  },
+  "register_success": {
+  "fa": "ثبت‌نام با موفقیت انجام شد!",
+  "en": "Registration completed successfully!",
+  "ru": "Регистрация прошла успешно!",
+  "tj": "Бақайдгирӣ бомуваффақият анҷом ёфт!"
+},
+"email_already_registered": {
+  "fa": "این ایمیل قبلاً ثبت‌نام شده است.",
+  "en": "This email is already registered.",
+  "ru": "Этот адрес уже зарегистрирован.",
+  "tj": "Ин почта аллакай сабт шудааст."
+}
 }

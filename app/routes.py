@@ -119,30 +119,32 @@ def admin_login():
 def admin_logout():
     session.pop('admin_logged_in', None)
     return redirect(url_for('main.admin_login'))
+
 @main.route('/register', methods=['GET', 'POST'])
 def register():
-    lang = get_lang()
+    lang = request.args.get('lang', 'fa')  # زبان از URL گرفته می‌شه
 
     if request.method == 'POST':
-        name = request.form['name']
         email = request.form['email']
         password = request.form['password']
+        name = request.form['name']
 
-        # چک کنیم ایمیل تکراری نباشه
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash('ایمیل قبلاً ثبت شده', 'danger')
-            return redirect(url_for('main.register'))
+            flash(t('email_already_registered', lang), 'danger')  # باید این ترجمه هم باشه
+            return redirect(url_for('main.register', lang=lang))
 
-        user = User(name=name, email=email)
+        user = User(email=email, name=name)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
 
-        flash('ثبت‌نام با موفقیت انجام شد!', 'success')
-        return redirect(url_for('main.login'))
+        flash(t('register_success', lang), 'success')  # ✅ اینجا اضافه کن
 
-    return render_template('register.html', t=t, lang=lang)
+        return redirect(url_for('main.login', lang=lang))
+
+    return render_template('register.html', lang=lang)
+
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -162,3 +164,12 @@ def login():
             flash('ایمیل یا رمز عبور اشتباه است.', 'danger')
 
     return render_template('login.html', t=t, lang=lang)
+
+from flask_login import logout_user
+
+@main.route('/logout')
+def logout():
+    logout_user()
+    flash('با موفقیت خارج شدید.', 'info')
+    return redirect(url_for('main.index', lang=get_lang()))
+
