@@ -148,8 +148,8 @@ def register():
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
-    lang = get_lang()
-
+    lang = request.args.get('lang', 'fa')
+    
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
