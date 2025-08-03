@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ t('profile', lang) }}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-light">
+    <div class="container mt-5">
+      <h2 class="mb-4">{{ t('profile', lang) }}</h2>
+
+      <div class="card">
+        <div class="card-body">
+          <p><strong>{{ t('username', lang) }}:</strong> {{ user.username }}</p>
+          <p><strong>{{ t('email', lang) }}:</strong> {{ user.email }}</p>
+          <p><strong>{{ t('registered_at', lang) }}:</strong> {{ user.created_at.strftime('%Y-%m-%d') }}</p>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <a href="{{ url_for('main.dashboard', lang=lang) }}" class="btn btn-secondary">{{ t('back_to_dashboard', lang) }}</a>
+      </div>
+    </div>
+  </body>
+</html>

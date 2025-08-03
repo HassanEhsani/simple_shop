@@ -111,5 +111,29 @@
         "fa": "با موفقیت خارج شدید.",
         "en": "You have been logged out successfully.",
         "ru": "Вы успешно вышли из системы."
-    }
+    },
+"profile": {
+  "fa": "پروفایل",
+  "en": "Profile",
+  "ru": "Профиль",
+  "tj": "Профил"
+},
+"registered_at": {
+  "fa": "تاریخ عضویت",
+  "en": "Registered At",
+  "ru": "Дата регистрации",
+  "tj": "Санаи бақайдгирӣ"
+},
+"back_to_dashboard": {
+  "fa": "بازگشت به داشبورد",
+  "en": "Back to Dashboard",
+  "ru": "Назад к панели",
+  "tj": "Бозгашт ба панел"
+},
+"under_construction": {
+    "fa": "در دست ساخت",
+    "en": "Under construction",
+    "ru": "В разработке"
+}
+
 }

@@ -187,5 +187,26 @@ def dashboard():
     lang = request.args.get('lang', 'fa')
     return render_template('dashboard.html', lang=lang, user=current_user)
 
+# @main.route('/dashboard')
+# @login_required
+# def dashboard():
+#     return render_template('dashboard.html', lang=request.args.get('lang', 'fa'))
 
+
+
+
+@main.route('/profile/<lang>')
+@login_required
+def profile(lang):
+    return render_template('profile.html', lang=lang, user=current_user)
+
+@main.route('/<lang>/orders')
+@login_required
+def orders(lang):
+    return render_template('orders.html', lang=lang, user=current_user)
+
+@main.route('/settings/<lang>')
+@login_required
+def settings(lang):
+    return render_template('settings.html', lang=lang, user=current_user)
 
