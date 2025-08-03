@@ -106,5 +106,10 @@
   "en": "Don't have an account? Register",
   "ru": "Нет аккаунта? Зарегистрируйтесь",
   "tj": "Ҳисоб надоред? Бақайдгирӣ кунед"
-}
+},
+"logout_success": {
+        "fa": "با موفقیت خارج شدید.",
+        "en": "You have been logged out successfully.",
+        "ru": "Вы успешно вышли из системы."
+    }
 }

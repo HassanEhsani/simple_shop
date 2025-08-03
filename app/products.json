@@ -27,6 +27,7 @@
       "id": 4,
       "name": "گوشی موبایل",
       "description": "گوشی موبایل سامسونگ",
+      "image": "mobiles.jpg",
       "price": 500,
       "category": "الکترونیک"
     },
@@ -34,6 +35,7 @@
       "id": 5,
       "name": "کتاب",
       "description": "کتاب برنامه نویسی",
+      "image": "book.jpg",
       "price": 20,
       "category": "کتاب"
     }

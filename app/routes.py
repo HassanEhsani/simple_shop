@@ -11,6 +11,7 @@ from flask import render_template, redirect, url_for, flash, request
 from app.forms import RegisterForm
 from app.models import db, User
 from flask_login import login_user
+from flask_login import login_required, current_user
 
 main = Blueprint('main', __name__)
 
@@ -159,7 +160,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             flash('ورود موفقیت‌آمیز بود!', 'success')
-            return redirect(url_for('main.index', lang=lang))
+            return redirect(url_for('main.dashboard', lang=lang))
         else:
             flash('ایمیل یا رمز عبور اشتباه است.', 'danger')
 
@@ -172,4 +173,19 @@ def logout():
     logout_user()
     flash('با موفقیت خارج شدید.', 'info')
     return redirect(url_for('main.index', lang=get_lang()))
+@login_required
+def logout():
+    logout_user()
+    lang = request.args.get('lang', 'fa')
+    flash('شما خارج شدید.', 'info')
+    return redirect(url_for('main.login', lang=lang))
+
+
+@main.route('/dashboard')
+@login_required
+def dashboard():
+    lang = request.args.get('lang', 'fa')
+    return render_template('dashboard.html', lang=lang, user=current_user)
+
+
 
