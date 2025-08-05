@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -27,10 +27,15 @@ def create_app(config_class=Config):
     # اضافه کردن تابع ترجمه به Jinja
     app.jinja_env.globals['t'] = t
 
-    # 🔻 اینجا منتقل شد به داخل تابع
+    # ✅ اضافه کردن context processors به صورت جداگانه
     @app.context_processor
     def inject_translator():
         return dict(t=t)
+
+    @app.context_processor
+    def inject_lang():
+        lang = request.args.get('lang', 'fa')
+        return dict(lang=lang)
 
     return app
 

@@ -44,6 +44,7 @@ def index():
 
 @main.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
+    lang = get_lang()
     product_id = int(request.form['product_id'])
     products = load_products()
     product = next((p for p in products if p['id'] == product_id), None)
@@ -52,17 +53,21 @@ def add_to_cart():
         cart = session.get('cart', [])
         cart.append(product)
         session['cart'] = cart
+        flash(t('product_added_to_cart', get_lang()), 'success')
 
     return redirect(url_for('main.index', lang=get_lang()))
 
 @main.route('/cart')
 def cart():
+    lang = get_lang() 
     cart = session.get('cart', [])
     total = sum(item['price'] for item in cart)
-    return render_template('cart.html', cart=cart, total=total)
+    return render_template('cart.html', cart=cart, total=total, lang=lang)
+
 
 @main.route('/checkout', methods=['GET', 'POST'])
 def checkout():
+    lang = get_lang()
     cart = session.get('cart', [])
     total = sum(item['price'] for item in cart)
 
@@ -84,20 +89,20 @@ def checkout():
 
         return f"Спасибо за заказ, {name}! Ваш заказ сохранён в базе данных."
 
-    return render_template('checkout.html', cart=cart, total=total)
+    return render_template('checkout.html', cart=cart, total=total, lang=lang)
 
 @main.route('/admin/orders')
 def admin_orders():
+    lang = get_lang()
     if not session.get('admin_logged_in'):
         return redirect(url_for('main.admin_login'))
 
     orders = Order.query.all()
-    return render_template('admin_orders.html', orders=orders)
+    return render_template('admin_orders.html', orders=orders, lang=lang)
 
 @main.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     lang = get_lang()
-
     urls_for_langs = {}
     for language_code in ['fa', 'en', 'ru']:
         args = request.args.to_dict()
@@ -118,12 +123,14 @@ def admin_login():
 
 @main.route('/admin/logout')
 def admin_logout():
+    lang = get_lang()
     session.pop('admin_logged_in', None)
     return redirect(url_for('main.admin_login'))
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
-    lang = request.args.get('lang', 'fa')  # زبان از URL گرفته می‌شه
+    lang = get_lang()
+    # lang = request.args.get('lang', 'fa')  # زبان از URL گرفته می‌شه
 
     if request.method == 'POST':
         email = request.form['email']
@@ -149,7 +156,8 @@ def register():
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
-    lang = request.args.get('lang', 'fa')
+    lang = get_lang()
+    # lang = request.args.get('lang', 'fa')
     
     if request.method == 'POST':
         email = request.form['email']
@@ -169,30 +177,22 @@ def login():
 from flask_login import logout_user
 
 @main.route('/logout')
-def logout():
-    logout_user()
-    flash('با موفقیت خارج شدید.', 'info')
-    return redirect(url_for('main.index', lang=get_lang()))
 @login_required
 def logout():
+    lang = get_lang()
     logout_user()
-    lang = request.args.get('lang', 'fa')
-    flash('شما خارج شدید.', 'info')
+    flash(t('logout_success', lang), 'info')  # ← اگر ترجمه‌ای هست
     return redirect(url_for('main.login', lang=lang))
+
+
 
 
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    lang = request.args.get('lang', 'fa')
+    lang = get_lang()
+    # lang = request.args.get('lang', 'fa') 
     return render_template('dashboard.html', lang=lang, user=current_user)
-
-# @main.route('/dashboard')
-# @login_required
-# def dashboard():
-#     return render_template('dashboard.html', lang=request.args.get('lang', 'fa'))
-
-
 
 
 @main.route('/profile/<lang>')
@@ -200,13 +200,20 @@ def dashboard():
 def profile(lang):
     return render_template('profile.html', lang=lang, user=current_user)
 
-@main.route('/<lang>/orders')
+
+@main.route('/orders/<lang>')
 @login_required
 def orders(lang):
     return render_template('orders.html', lang=lang, user=current_user)
+
 
 @main.route('/settings/<lang>')
 @login_required
 def settings(lang):
     return render_template('settings.html', lang=lang, user=current_user)
+
+
+
+
+
 

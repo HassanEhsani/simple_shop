@@ -134,6 +134,20 @@
     "fa": "در دست ساخت",
     "en": "Under construction",
     "ru": "В разработке"
-}
-
+},
+"product_added_to_cart": {
+  "fa": "کالا با موفقیت به سبد خرید اضافه شد.",
+  "en": "Product successfully added to cart.",
+  "ru": "Товар успешно добавлен в корзину."
+},
+"dashboard": {
+    "fa": "داشبورد",
+    "en": "Dashboard",
+    "ru": "Панель управления"
+  },
+  "welcome_back": {
+    "fa": "خوش برگشتی",
+    "en": "Welcome back",
+    "ru": "С возвращением"
+  }
 }
