@@ -175,11 +175,11 @@ def logout():
     return redirect(url_for('main.login', lang=lang))
 
 
-@main.route('/dashboard')
-@login_required
-def dashboard():
-    lang = get_lang()
-    return render_template('dashboard.html', lang=lang, user=current_user)
+# @main.route('/dashboard')
+# @login_required
+# def dashboard():
+#     lang = get_lang()
+#     return render_template('dashboard.html', lang=lang, user=current_user)
 
 
 @main.route('/profile/<lang>')
@@ -204,3 +204,38 @@ def settings(lang):
 def set_lang(lang_code):
     session['lang'] = lang_code
     return redirect(request.referrer or url_for('main.index', lang=lang_code))
+
+@main.route('/dashboard')
+@login_required
+def dashboard():
+    lang = get_lang()
+
+    # آمار کلی
+    total_orders = Order.query.count()
+    total_users = User.query.count()
+    total_revenue = db.session.query(db.func.sum(Order.total)).scalar() or 0
+
+    # لیست سفارش‌ها
+    orders = Order.query.order_by(Order.id.desc()).limit(5).all()
+
+    return render_template(
+        'dashboard.html',
+        lang=lang,
+        t=t,
+        total_orders=total_orders,
+        total_users=total_users,
+        total_revenue=total_revenue,
+        orders=orders
+    )
+
+
+@main.route('/admin/orders/<lang>')
+@login_required
+def admin_orders(lang):
+    # می‌تونی شرط بزاری که فقط مدیر اجازه داشته باشه، مثلا:
+    if not session.get('admin_logged_in'):
+        flash(t('access_denied', lang), 'danger')
+        return redirect(url_for('main.admin_login', lang=lang))
+    
+    orders = Order.query.order_by(Order.id.desc()).all()
+    return render_template('admin_orders.html', lang=lang, orders=orders)

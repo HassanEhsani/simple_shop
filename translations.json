@@ -145,17 +145,45 @@
     "en": "Dashboard",
     "ru": "Панель управления"
   },
-  "welcome_back": {
-    "fa": "خوش برگشتی",
-    "en": "Welcome back",
-    "ru": "С возвращением"
-  },
-  "fa": {
-        "home": "خانه",
-        "logout": "خروج"
-    },
-    "en": {
-        "home": "Home",
-        "logout": "Logout"
-    }
+"welcome_back": {
+"fa": "خوش برگشتی",
+"en": "Welcome back",
+"ru": "С возвращением"
+},
+"fa": {
+    "home": "خانه",
+    "logout": "خروج"
+},
+"en": {
+    "home": "Home",
+    "logout": "Logout"
+},
+"fa": {
+  "dashboard": "داشبورد",
+  "overview": "نمای کلی",
+  "orders": "سفارش‌ها",
+  "settings": "تنظیمات",
+  "logout": "خروج",
+  "total_orders": "تعداد سفارش‌ها",
+  "total_users": "تعداد کاربران",
+  "total_revenue": "مجموع درآمد",
+  "latest_orders": "آخرین سفارش‌ها",
+  "name": "نام",
+  "total": "مبلغ",
+  "address": "آدرس"
+},
+"en": {
+  "dashboard": "Dashboard",
+  "overview": "Overview",
+  "orders": "Orders",
+  "settings": "Settings",
+  "logout": "Logout",
+  "total_orders": "Total Orders",
+  "total_users": "Total Users",
+  "total_revenue": "Total Revenue",
+  "latest_orders": "Latest Orders",
+  "name": "Name",
+  "total": "Total",
+  "address": "Address"
+}
 }

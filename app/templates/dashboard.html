@@ -1,35 +1,50 @@
 {% extends "base.html" %}
 
-{% block title %}
-  {{ t('dashboard', lang) }}
-{% endblock %}
-
 {% block content %}
-<div class="container py-5">
-  <h2 class="text-center mb-4">
-    {{ t('welcome_back', lang) }}, {{ current_user.name or current_user.email }}!
-  </h2>
-  <div class="row text-center">
-    <div class="col-md-3 mb-2">
-      <a href="{{ url_for('main.profile', lang=lang) }}" class="btn btn-outline-primary w-100">
-        {{ t('profile', lang) }}
-      </a>
+<div style="display: flex;">
+    <!-- Sidebar -->
+    <div style="width: 200px; background: #f4f4f4; padding: 15px;">
+        <h3>{{ t("dashboard", lang) }}</h3>
+        <ul>
+            <li><a href="{{ url_for('main.dashboard', lang=lang) }}">{{ t("overview", lang) }}</a></li>
+            <li><a href="{{ url_for('main.admin_orders', lang=lang) }}">{{ t("orders", lang) }}</a></li>
+            <li><a href="{{ url_for('main.settings', lang=lang) }}">{{ t("settings", lang) }}</a></li>
+            <li><a href="{{ url_for('main.logout', lang=lang) }}">{{ t("logout", lang) }}</a></li>
+        </ul>
     </div>
-    <div class="col-md-3 mb-2">
-      <a href="{{ url_for('main.orders', lang=lang) }}" class="btn btn-outline-secondary w-100">
-        {{ t('my_orders', lang) }}
-      </a>
+
+    <!-- Main Content -->
+    <div style="flex: 1; padding: 20px;">
+        <h2>{{ t("overview", lang) }}</h2>
+        <div style="display: flex; gap: 20px;">
+            <div style="background: #e3f2fd; padding: 10px; border-radius: 5px;">
+                {{ t("total_orders", lang) }}: {{ total_orders }}
+            </div>
+            <div style="background: #e8f5e9; padding: 10px; border-radius: 5px;">
+                {{ t("total_users", lang) }}: {{ total_users }}
+            </div>
+            <div style="background: #fff3e0; padding: 10px; border-radius: 5px;">
+                {{ t("total_revenue", lang) }}: {{ total_revenue }}
+            </div>
+        </div>
+
+        <h3 style="margin-top: 30px;">{{ t("latest_orders", lang) }}</h3>
+        <table border="1" cellpadding="5" cellspacing="0">
+            <tr>
+                <th>ID</th>
+                <th>{{ t("name", lang) }}</th>
+                <th>{{ t("total", lang) }}</th>
+                <th>{{ t("address", lang) }}</th>
+            </tr>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.name }}</td>
+                <td>{{ order.total }}</td>
+                <td>{{ order.address }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
-    <div class="col-md-3 mb-2">
-      <a href="{{ url_for('main.settings', lang=lang) }}" class="btn btn-outline-success w-100">
-        {{ t('settings', lang) }}
-      </a>
-    </div>
-    <div class="col-md-3 mb-2">
-      <a href="{{ url_for('main.logout', lang=lang) }}" class="btn btn-outline-danger w-100">
-        {{ t('logout', lang) }}
-      </a>
-    </div>
-  </div>
 </div>
 {% endblock %}
