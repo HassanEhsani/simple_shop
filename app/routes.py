@@ -1,29 +1,27 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
-from .models import Order, OrderItem
+# app/routes.py
+import os, json
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from .models import Order, OrderItem, User
 from . import db
 from .translations import t
-import json
-import os
-from .models import User
-from werkzeug.security import generate_password_hash
-from flask import flash
-from flask import render_template, redirect, url_for, flash, request
-from app.forms import RegisterForm
-from app.models import db, User
-from flask_login import login_user
-from flask_login import login_required, current_user
+from flask_login import login_user, logout_user, login_required, current_user
 
 main = Blueprint('main', __name__)
 
-# کمکی برای زبان
+# helper
 def get_lang():
-    return request.args.get('lang', 'fa')
+    # اول پارامتر URL، بعد session، در نهایت fa
+    lang = request.args.get('lang')
+    if lang:
+        session['lang'] = lang
+        return lang
+    return session.get('lang', 'fa')
 
-# کمکی برای بارگذاری محصولات (فرض می‌کنیم محصولات در یک فایل JSON هستند)
 def load_products():
     PRODUCTS_PATH = os.path.join(os.path.dirname(__file__), 'products.json')
     with open(PRODUCTS_PATH, 'r', encoding='utf-8') as f:
         return json.load(f)
+
 
 @main.route('/')
 def index():
@@ -34,13 +32,12 @@ def index():
 
     if search_query:
         products = [p for p in products if search_query.lower() in p['name'].lower()]
-
     if category:
         products = [p for p in products if category.lower() in p['category'].lower()]
 
-    categories = set(p['category'] for p in products)
-
+    categories = sorted(set(p['category'] for p in products))
     return render_template('index.html', t=t, lang=lang, products=products, categories=categories)
+
 
 @main.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
@@ -53,13 +50,14 @@ def add_to_cart():
         cart = session.get('cart', [])
         cart.append(product)
         session['cart'] = cart
-        flash(t('product_added_to_cart', get_lang()), 'success')
+        flash(t('product_added_to_cart', lang), 'success')
 
-    return redirect(url_for('main.index', lang=get_lang()))
+    return redirect(url_for('main.index', lang=lang))
+
 
 @main.route('/cart')
 def cart():
-    lang = get_lang() 
+    lang = get_lang()
     cart = session.get('cart', [])
     total = sum(item['price'] for item in cart)
     return render_template('cart.html', cart=cart, total=total, lang=lang)
@@ -86,60 +84,56 @@ def checkout():
 
         db.session.commit()
         session.pop('cart', None)
-
-        return f"Спасибо за заказ, {name}! Ваш заказ сохранён в базе данных."
+        flash(t('submit_order', lang), 'success')
+        return redirect(url_for('main.index', lang=lang))
 
     return render_template('checkout.html', cart=cart, total=total, lang=lang)
 
-@main.route('/admin/orders')
-def admin_orders():
-    lang = get_lang()
-    if not session.get('admin_logged_in'):
-        return redirect(url_for('main.admin_login'))
-
-    orders = Order.query.all()
-    return render_template('admin_orders.html', orders=orders, lang=lang)
 
 @main.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     lang = get_lang()
     urls_for_langs = {}
-    for language_code in ['fa', 'en', 'ru']:
+    for code in ['fa', 'en', 'ru', 'tj']:
         args = request.args.to_dict()
-        args['lang'] = language_code
-        urls_for_langs[language_code] = url_for(request.endpoint, **args)
+        args['lang'] = code
+        try:
+            urls_for_langs[code] = url_for(request.endpoint, **args)
+        except Exception:
+            urls_for_langs[code] = url_for('main.index', lang=code)
 
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
         if username == 'admin' and password == '1234':
             session['admin_logged_in'] = True
-            return redirect(url_for('main.admin_orders'))
+            return redirect(url_for('main.index', lang=lang))
         else:
-            return t('wrong_login', lang)
+            flash(t('wrong_login', lang), 'danger')
 
     return render_template('admin_login.html', t=t, lang=lang, urls_for_langs=urls_for_langs)
+
 
 @main.route('/admin/logout')
 def admin_logout():
     lang = get_lang()
     session.pop('admin_logged_in', None)
-    return redirect(url_for('main.admin_login'))
+    flash(t('logout_success', lang), 'info')
+    return redirect(url_for('main.admin_login', lang=lang))
+
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     lang = get_lang()
-    # lang = request.args.get('lang', 'fa')  # زبان از URL گرفته می‌شه
 
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        name = request.form['name']
+        name = request.form.get('name') or ''
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash(t('email_already_registered', lang), 'danger')  # باید این ترجمه هم باشه
+            flash(t('email_already_registered', lang), 'danger')
             return redirect(url_for('main.register', lang=lang))
 
         user = User(email=email, name=name)
@@ -147,8 +141,7 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        flash(t('register_success', lang), 'success')  # ✅ اینجا اضافه کن
-
+        flash(t('register_success', lang), 'success')
         return redirect(url_for('main.login', lang=lang))
 
     return render_template('register.html', lang=lang)
@@ -157,41 +150,35 @@ def register():
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     lang = get_lang()
-    # lang = request.args.get('lang', 'fa')
-    
+
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
 
         user = User.query.filter_by(email=email).first()
-
         if user and user.check_password(password):
             login_user(user)
-            flash('ورود موفقیت‌آمیز بود!', 'success')
+            flash(t('login_success', lang) if 'login_success' in t.__code__.co_consts else t('login', lang), 'success')
             return redirect(url_for('main.dashboard', lang=lang))
         else:
-            flash('ایمیل یا رمز عبور اشتباه است.', 'danger')
+            flash(t('wrong_login', lang), 'danger')
 
     return render_template('login.html', t=t, lang=lang)
 
-from flask_login import logout_user
 
 @main.route('/logout')
 @login_required
 def logout():
     lang = get_lang()
     logout_user()
-    flash(t('logout_success', lang), 'info')  # ← اگر ترجمه‌ای هست
+    flash(t('logout_success', lang), 'info')
     return redirect(url_for('main.login', lang=lang))
-
-
 
 
 @main.route('/dashboard')
 @login_required
 def dashboard():
     lang = get_lang()
-    # lang = request.args.get('lang', 'fa') 
     return render_template('dashboard.html', lang=lang, user=current_user)
 
 
@@ -213,7 +200,7 @@ def settings(lang):
     return render_template('settings.html', lang=lang, user=current_user)
 
 
-
-
-
-
+@main.route('/set_lang/<lang_code>')
+def set_lang(lang_code):
+    session['lang'] = lang_code
+    return redirect(request.referrer or url_for('main.index', lang=lang_code))

@@ -149,5 +149,13 @@
     "fa": "خوش برگشتی",
     "en": "Welcome back",
     "ru": "С возвращением"
-  }
+  },
+  "fa": {
+        "home": "خانه",
+        "logout": "خروج"
+    },
+    "en": {
+        "home": "Home",
+        "logout": "Logout"
+    }
 }
